@@ -1,0 +1,1 @@
+export const url:string = `http://94.158.54.194:9092/api/product`
