@@ -3,7 +3,8 @@
         <form>
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input autocomplete="off" type="text" class="form-control" id="name" placeholder="Only Name" v-model="name">
+                <input autocomplete="off" type="text" class="form-control" id="name" placeholder="Only Name"
+                    v-model="name">
             </div>
             <div class="mb-3">
                 <label for="name" class="form-label">Cost</label>
@@ -15,7 +16,7 @@
                 <input autocomplete="off" type="text" class="form-control" id="name" placeholder="Only Name"
                     v-model="address">
             </div>
-            <button class="btn btn-secondary px-5 py-3" @click="post_category">CREATE</button>
+            <button class="btn btn-secondary px-5 py-3" @click="add_category">CREATE</button>
 
         </form>
     </div>
@@ -23,12 +24,15 @@
   
 <script setup lang="ts">
 import { useCounterStore } from '../stores/counter';
-import type { Catalog } from '@/models/types';
-import { ref } from 'vue';
-
+import {ref} from 'vue'
 const store = useCounterStore();
-const catalog = ref<Catalog[]>([]);
-const { post_category, name, cost, address } = store;
+
+const { add_category } = store;
+
+const name = ref<string>('');
+const cost = ref<number | null>(null);
+const address = ref<string>('');
+
 </script>
   
 <style scoped>

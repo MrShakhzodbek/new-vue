@@ -6,15 +6,11 @@ import { url } from './vars'
 import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router';
 
+
+
 export const useCounterStore = defineStore('counter', () => {
-
   const counter = ref<Category[]>([])
-  const catalog = ref<Catalog[]>([])
   const router = useRouter()
-  const name = ref('');
-  const cost = ref<number | null>(null);
-  const address = ref('');
-
   const route = useRoute();
   const id = Number(route.params.id);
   const nameNew = ref(route.query.name as string);
@@ -26,7 +22,7 @@ export const useCounterStore = defineStore('counter', () => {
 
   const get_category = async (): Promise<void> => {
     let res = await axios.get(`${url}`)
-    if (res.status == 200) {
+    if (res.status === 200) {
       counter.value = [...res.data]
     }
   }
@@ -38,24 +34,39 @@ export const useCounterStore = defineStore('counter', () => {
       })
     }
   }
-  const post_category = async (): Promise<void> => {
-    const userObj: Category = {
+  const add_category = async (payload: Category): Promise<void> => {
+    const obj: Category = {
       id,
       product_type_id: 0,
-      name_uz: name.value,
-      cost: cost.value,
-      address: address.value,
-      created_date: new Date(),
-    };
+      name_uz: payload.name_uz,
+      cost: payload.cost,
+      address: payload.address,
+      created_date: new Date().toString()
+    }
 
-    const response = await axios.post(`${url}`, userObj)
-    if (response.status == 200) {
-      console.log(response.data)
+    let result = await axios.post(`${url}`, obj)
+    if (result.status == 200) {
+      counter.value = [result.data, ...counter.value]
+
     }
   }
 
+  const put_category = async (): Promise<void> => {
+    const userObj: Category = {
+      product_type_id: 0,
+      id,
+      name_uz: nameNew.value,
+      cost: costNew.value,
+      address: addressNew.value,
+      created_date: new Date(),
+    };
+    const response = await axios.put(`${url}`, userObj);
+    if (response.status == 200) {
+      console.log(response.data);
+    }
+  }
 
-  const pass_category = (id: number)=> {
+  function passUpdatePage(id: number) {
     const singleData = counter.value.find((el) => el.id === id)
     router.push({
       path: `update/${id}`,
@@ -67,29 +78,14 @@ export const useCounterStore = defineStore('counter', () => {
     })
   }
 
-  const put_category = async (): Promise<void> => {
-    const userObj: Category = {
-      product_type_id: 0,
-      id,
-      name_uz: nameNew.value,
-      cost: isNaN(costNew.value) ? null : costNew.value,
-      address: addressNew.value,
-      created_date: new Date(),
-    };
-    const response = await axios.put(`${url}`, userObj);
-    if (response.status == 200) {
-      console.log(response.data);
-    }
-  }
-
 
   return {
     counter,
-    catalog,
     get_category,
     delete_category,
-    post_category,
-    pass_category,
+    add_category,
+    passUpdatePage,
     put_category
+
   }
 })

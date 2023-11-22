@@ -4,7 +4,7 @@ export interface Category  {
     name_uz: string ,
     cost : number | null,
     address:  string,
-    created_date: Date
+    created_date: Date | string
 }
 
 export interface Catalog{
